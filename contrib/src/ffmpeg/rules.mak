@@ -252,6 +252,10 @@ ifdef USE_FFMPEG
 	$(APPLY) $(SRC)/ffmpeg/0001-avcodec-vp9-add-profile-2-10-bit-DXVA2-D3D11-decodin.patch
 	$(APPLY) $(SRC)/ffmpeg/0001-avcodec-mpeg12dec-don-t-call-hw-end_frame-when-start.patch
 	$(APPLY) $(SRC)/ffmpeg/0002-avcodec-mpeg12dec-don-t-end-a-slice-without-first_sl.patch
+	$(APPLY) $(SRC)/ffmpeg/0001-avcodec-videotoolboxenc-fix-mutex-cond-leak-in-error.patch
+	$(APPLY) $(SRC)/ffmpeg/0002-avcodec-videotoolboxenc-split-initialization.patch
+	$(APPLY) $(SRC)/ffmpeg/0003-avcodec-videotoolboxenc-fix-invalid-session-on-iOS.patch
+	$(APPLY) $(SRC)/ffmpeg/0004-avcodec-videotoolboxenc-fix-undefined-behavior-with-.patch
 endif
 ifdef USE_LIBAV
 	$(APPLY) $(SRC)/ffmpeg/libav_gsm.patch
