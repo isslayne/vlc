@@ -89,6 +89,7 @@ enum libvlc_event_e {
     libvlc_MediaPlayerAudioDevice,
     libvlc_MediaPlayerChapterChanged,
     libvlc_MediaPlayerRecordChanged,
+    libvlc_MediaPlayerLoudnessChanged,
 
     libvlc_MediaListItemAdded=0x200,
     libvlc_MediaListWillAddItem,
@@ -208,6 +209,11 @@ typedef struct libvlc_event_t
         {
             int new_count;
         } media_player_vout;
+
+        struct
+        {
+            double momentary_loudness;
+        } media_player_loudness_changed;
 
         /* media list */
         struct
