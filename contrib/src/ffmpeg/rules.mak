@@ -30,6 +30,10 @@ FFMPEGCONF = \
 	--disable-decoder=mlp \
 	--disable-demuxer=mlp \
 	--disable-parser=mlp \
+	
+	--enable-gpl \
+	--enable-libuavs3d \
+
 	--disable-debug \
 	--disable-avdevice \
 	--disable-devices \
