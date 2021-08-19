@@ -4,3 +4,4 @@
 *.tgz
 *.idl
 *.githash
+!live.2016.10.21.tar.gz
