@@ -76,9 +76,6 @@ static void Close ( vlc_object_t * );
  *          1. pid:pcr (to force the pcr pid)
  *          2. pid:stream_type
  *          3. pid:type=fourcc where type=(video|audio|spu)
- *   Ex: Program 1 on pid 8190 with hevc on pid 289, aac on pid 305
- *       and pcr on 305
- *      "8190:1=289:video=hevc,305:pcr,305:audio=mp4a"
  */
 #define PMT_TEXT N_("Extra PMT")
 #define PMT_LONGTEXT N_( \
@@ -1769,8 +1766,7 @@ static block_t* ReadTSPacket( demux_t *p_demux )
                 }
                 i_skip++;
             }
-            msg_Dbg( p_demux, "skipping %d bytes of garbage at %"PRIu64,
-                     i_skip, vlc_stream_Tell( p_sys->stream ) );
+            msg_Dbg( p_demux, "skipping %d bytes of garbage", i_skip );
             if (vlc_stream_Read( p_sys->stream, NULL, i_skip ) != i_skip)
                 return NULL;
 
@@ -1779,7 +1775,6 @@ static block_t* ReadTSPacket( demux_t *p_demux )
                 break;
             }
         }
-        msg_Dbg( p_demux, "resynced at %" PRIu64, vlc_stream_Tell( p_sys->stream ) );
         if( !( p_pkt = vlc_stream_Block( p_sys->stream, p_sys->i_packet_size ) ) )
         {
             msg_Dbg( p_demux, "eof ?" );
@@ -1795,15 +1790,10 @@ static mtime_t GetPCR( const block_t *p_pkt )
 
     mtime_t i_pcr = -1;
 
-    if(unlikely(p_pkt->i_buffer < 12))
-        return i_pcr;
-
-    const uint8_t i_adaption = p[3] & 0x30;
-
-    if( ( ( i_adaption == 0x30 && p[4] <= 182 ) ||   /* adaptation 0b11 */
-          ( i_adaption == 0x20 && p[4] == 183 ) ) && /* adaptation 0b10 */
-        ( p[4] >= 7 )  &&
-        ( p[5] & 0x10 ) ) /* PCR carry flag */
+    if( likely(p_pkt->i_buffer > 11) &&
+        ( p[3]&0x20 ) && /* adaptation */
+        ( p[5]&0x10 ) &&
+        ( p[4] >= 7 ) )
     {
         /* PCR is 33 bits */
         i_pcr = ( (mtime_t)p[6] << 25 ) |
@@ -2260,9 +2250,12 @@ static void PCRCheckDTS( demux_t *p_demux, ts_pmt_t *p_pmt, mtime_t i_pcr)
         if( p_pes->gather.i_data_size != 0 )
             continue;
 
-        /* check only MPEG2, H.264 and VC-1 */
+        /* check only MPEG2, H.264, CAVS, AVS2 and VC-1 */
         if( p_es->fmt.i_codec != VLC_CODEC_MPGV &&
             p_es->fmt.i_codec != VLC_CODEC_H264 &&
+            p_es->fmt.i_codec != VLC_CODEC_CAVS &&
+            p_es->fmt.i_codec != VLC_CODEC_AVS2 &&
+            p_es->fmt.i_codec != VLC_CODEC_AVS3 &&
             p_es->fmt.i_codec != VLC_CODEC_VC1 )
             continue;
 

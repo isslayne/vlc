@@ -254,6 +254,18 @@ static inline int ps_track_fill( ps_track_t *tk, ps_psm_t *p_psm,
             {
                 es_format_Change( &tk->fmt, VIDEO_ES, VLC_CODEC_HEVC );
             }
+            else if( i_type == 0x42)
+            {
+                es_format_Change( &tk->fmt, VIDEO_ES, VLC_CODEC_CAVS );
+            }
+            else if( i_type == 0x43 || i_type == 0xd2)
+            {
+                es_format_Change( &tk->fmt, VIDEO_ES, VLC_CODEC_AVS2 );
+            }
+            else if(i_type == 0xd4)
+            {
+                es_format_Change( &tk->fmt, VIDEO_ES, VLC_CODEC_AVS3 );
+            }
             else if( i_id == 0xe2 || /* Primary H.264 in evob */
                      i_id == 0xe3 )  /* Seconday H.264 in evob */
             {

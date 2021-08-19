@@ -68,6 +68,7 @@ src/config/help.c
 src/config/intf.c
 src/darwin/error.c
 src/extras/libc.c
+src/extras/tdestroy.c
 src/input/access.c
 src/input/clock.c
 src/input/clock.h
@@ -288,6 +289,7 @@ modules/audio_output/wasapi.c
 modules/audio_output/waveout.c
 modules/audio_output/windows_audio_common.h
 modules/audio_output/winstore.c
+modules/codec/davs2.c
 modules/codec/a52.c
 modules/codec/adpcm.c
 modules/codec/aes3.c
